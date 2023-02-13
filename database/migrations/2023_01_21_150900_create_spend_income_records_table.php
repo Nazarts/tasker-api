@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('spend_income_records', function (Blueprint $table) {
             $table->id()->autoIncrement();
-            $table->foreignId('user_id')->constrained('users');
             $table->text('task_name')->nullable(false);
             $table->dateTime('record_time')->nullable(false);
+            $table->float('sum')->nullable(false);
             $table->foreignId('category_id')->constrained('spend_income_categories');
             $table->timestamps();
         });

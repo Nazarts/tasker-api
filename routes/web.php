@@ -21,3 +21,6 @@ Route::get('/', function () {
 Route::middleware('auth:sanctum')->controller(LoginController::class)->group(function(){
     Route::post('/login', 'authenticate')->name('login');
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

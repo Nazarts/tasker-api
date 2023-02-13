@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->foreignId('user_id')->constrained('users');
             $table->text('category_name')->nullable(false);
-            $table->foreignId('category_type_id')->constrained('record_types');
-            $table->timestamps();
+            $table->foreignId('record_type_id')->constrained('record_types');
         });
     }
 

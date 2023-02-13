@@ -10,4 +10,8 @@ class SpendIncomeCategory extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'category_name', 'category_type_id'];
+
+    public function user() {
+        return $this->belongsTo(User::class)->get();
+    }
 }

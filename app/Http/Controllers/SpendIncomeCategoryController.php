@@ -14,9 +14,9 @@ class SpendIncomeCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $spend_income_categories = SpendIncomeCategory::all();
+        $spend_income_categories = SpendIncomeCategory::all()->where('user_id', '=', $request->user()->id);
 
         return response()->json($spend_income_categories);
     }
@@ -31,7 +31,7 @@ class SpendIncomeCategoryController extends Controller
     {
         $validatedCategory = $request->validate([
             'category_name' => ['required', 'unique'], 
-            'category_type_id' => ['required', 'exists:record_types,record_type']
+            'record_type_id' => ['required', 'exists:record_types,record_type']
         ]);
         $validatedCategory['user_id'] = Auth::id();
     }

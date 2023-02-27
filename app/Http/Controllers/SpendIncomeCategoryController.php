@@ -6,6 +6,7 @@ use App\Models\SpendIncomeCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SpendIncomeCategoryController extends Controller
 {
@@ -18,7 +19,13 @@ class SpendIncomeCategoryController extends Controller
     {
         $spend_income_categories = SpendIncomeCategory::all()->where('user_id', '=', $request->user()->id);
 
-        return response()->json($spend_income_categories);
+        $type = $request->query('type', null);
+
+        if ($type != null) {
+            $spend_income_categories = $spend_income_categories->where('record_type_id', $type);
+        }
+
+        return response()->json($spend_income_categories->toArray());
     }
 
     /**
@@ -30,10 +37,18 @@ class SpendIncomeCategoryController extends Controller
     public function store(Request $request)
     {
         $validatedCategory = $request->validate([
-            'category_name' => ['required', 'unique'], 
-            'record_type_id' => ['required', 'exists:record_types,record_type']
+            'category_name' => ['required', 'unique:spend_income_categories'], 
+            'record_type_id' => ['required', 'exists:record_types,id']
         ]);
-        $validatedCategory['user_id'] = Auth::id();
+        $validatedCategory['user_id'] = $request->user()->id;
+
+        Log::info(json_encode($validatedCategory));
+
+        $category = new SpendIncomeCategory($validatedCategory);
+
+        Log::info(json_encode($category));
+
+        $category->save();
     }
 
     /**

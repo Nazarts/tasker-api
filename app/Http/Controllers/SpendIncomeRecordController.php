@@ -33,7 +33,14 @@ class SpendIncomeRecordController extends Controller
 
         $date_end = $request->query('date_end', null);
         if ($date_end) {
-            $spend_income_records = $spend_income_records->where('record_time', '<=',$date_end);
+            $spend_income_records = $spend_income_records->where('record_time', '<=', $date_end);
+        }
+
+        Log::info($request->query('category_id', null));
+
+        $category_id = $request->query('category_id', null);
+        if ($category_id != null) {
+            $spend_income_records = $spend_income_records->where('category_id', $category_id);
         }
 
         return response()->json($spend_income_records->select('spend_income_records.*', 'spend_income_categories.category_name', 'spend_income_categories.record_type_id')->orderBy('record_time')->get());
@@ -132,8 +139,8 @@ class SpendIncomeRecordController extends Controller
     public function destroy($id)
     {
 
-        SpendIncomeRecord::find($id)->delete();
-        Log::info($id);
+        $record = SpendIncomeRecord::find($id);
+        $record->delete();
         return response()->json(['status' => 'deleted']);
     }
 }
